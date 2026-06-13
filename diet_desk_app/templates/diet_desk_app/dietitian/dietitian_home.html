@@ -1,0 +1,514 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dietitian Home | DietDesk</title>
+
+    <!-- Premium Google Fonts & Tabler SVG Icon Suite -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+    {% include 'diet_desk_app/common/cdn.html' %}
+
+    <style>
+        /* ── Dynamic Ambient Canvas ── */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #0f172a;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f9f5;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(34, 197, 94, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(134, 239, 172, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .portal-container {
+            width: 100%;
+            max-width: 1140px;
+            margin: 40px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        /* ── Master Hero Panel ── */
+        .hero-panel {
+            background: linear-gradient(135deg, #0a1a0f 0%, #14532d 100%);
+            color: white;
+            padding: 56px 48px;
+            border-radius: 32px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(20, 83, 45, 0.12);
+            margin-bottom: 32px;
+        }
+
+        .hero-panel::before {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -5%;
+            width: 320px;
+            height: 320px;
+            background: rgba(34, 197, 94, 0.2);
+            filter: blur(80px);
+            border-radius: 50%;
+        }
+
+        .hero-badge {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .hero-panel h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin: 0 0 12px 0;
+            line-height: 1.2;
+        }
+
+        .hero-panel p {
+            font-size: 1.05rem;
+            color: #a7f3d0;
+            max-width: 600px;
+            margin: 0 0 28px 0;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .hero-btn-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn-primary {
+            background: #22c55e;
+            color: white !important;
+            border-radius: 14px;
+            padding: 12px 28px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-btn-primary:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
+        }
+
+        .hero-btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white !important;
+            border-radius: 14px;
+            padding: 12px 28px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .hero-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.35);
+        }
+
+        .hero-profile-wrapper {
+            position: relative;
+            width: 170px;
+            height: 170px;
+            margin: 0 auto;
+        }
+
+        .hero-profile {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-profile-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #86efac);
+            z-index: 1;
+        }
+
+        /* ── Profile Snapshot Card ── */
+        .profile-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 28px;
+            padding: 40px 24px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.01);
+            box-sizing: border-box;
+            height: 100%;
+        }
+
+        .profile-img-track {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 20px auto;
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-img-track::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #86efac);
+            z-index: 1;
+        }
+
+        .profile-card h3 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #0a1a0f;
+            margin: 0 0 4px 0;
+            letter-spacing: -0.02em;
+        }
+
+        .qualification-text {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 500;
+            margin: 0 0 20px 0;
+        }
+
+        .city-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #16a34a;
+            background: #f0fdf4;
+            padding: 6px 14px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ── Action Navigation Hub ── */
+        .action-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 28px 24px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.01);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-sizing: border-box;
+            height: 100%;
+        }
+
+        .action-card:hover {
+            transform: translateY(-6px);
+            background: #ffffff;
+            border-color: rgba(34, 197, 94, 0.2);
+            box-shadow: 0 20px 35px rgba(34, 197, 94, 0.05);
+        }
+
+        .action-header-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .action-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #f0fdf4;
+            color: #16a34a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: all 0.25s ease;
+        }
+
+        .action-card:hover .action-icon-box {
+            background: #22c55e;
+            color: white;
+        }
+
+        .action-card h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0a1a0f;
+            margin: 0;
+            letter-spacing: -0.01em;
+        }
+
+        .action-card p {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* ── Clinical Meta Card ── */
+        .info-card {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.015);
+            padding: 32px;
+            box-sizing: border-box;
+        }
+
+        .info-card h4 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #0a1a0f;
+            margin: 0 0 20px 0;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card h4 i {
+            color: #16a34a;
+        }
+
+        .meta-data-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .meta-data-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            border-bottom: 1px dashed #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        .meta-data-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .meta-data-item .meta-label {
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .meta-data-item .meta-value {
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        /* ── Medical Quotes Section ── */
+        .quote-card {
+            background: #ffffff;
+            border-left: 5px solid #22c55e;
+            padding: 28px 32px;
+            border-radius: 0 20px 20px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+            box-sizing: border-box;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            margin-top: 40px;
+        }
+
+        .quote-icon {
+            font-size: 1.75rem;
+            color: #16a34a;
+            background: #f0fdf4;
+            padding: 10px;
+            border-radius: 12px;
+            display: inline-flex;
+        }
+
+        .quote-card h3 {
+            color: #0a1a0f;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+        }
+
+        .quote-card p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #475569;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+
+{% include 'diet_desk_app/dietitian/dietitian_navbar.html' %}
+
+<div class="portal-container">
+
+    <!-- ── Hero Banner Section ── -->
+    <section class="hero-panel">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8 text-center text-lg-start">
+                <span class="hero-badge">
+                    <i class="ti ti-activity-heartbeat"></i> Clinical Station
+                </span>
+                <h1>Welcome Back,<br>Dr. {{dietitian.name}} 👋</h1>
+                <p>Empower patients and global users to scale healthy living indexes through personalized organic structure charts and medical wellness guidance panels.</p>
+                
+                <div class="hero-btn-group justify-content-center justify-content-lg-start">
+                    <a href="{% url 'dietitian_post' %}" class="hero-btn-primary">
+                        <i class="ti ti-plus"></i> Create New Post
+                    </a>
+                    <a href="{% url 'edit_dietitian' %}" class="hero-btn-secondary">
+                        <i class="ti ti-user-shield"></i> Settings Workspace
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 d-none d-lg-block text-center">
+                <div class="hero-profile-wrapper">
+                    <img src="{{dietitian.profile_pic.url}}" class="hero-profile" alt="Practitioner Bio Pic">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Profile & Action Deck Matrix ── -->
+    <div class="row g-4">
+        
+        <!-- Practitioner Brief -->
+        <div class="col-lg-4">
+            <div class="profile-card">
+                <div class="profile-img-track">
+                    <img src="{{dietitian.profile_pic.url}}" class="profile-img" alt="Avatar Preview">
+                </div>
+                <h3>Dr. {{dietitian.name}}</h3>
+                <p class="qualification-text">{{dietitian.qualification}}</p>
+                <span class="city-badge">
+                    <i class="ti ti-map-pin"></i> Base: {{dietitian.city}}
+                </span>
+            </div>
+        </div>
+
+        <!-- Metrics & Core Route Grid -->
+        <div class="col-lg-8">
+            <div class="row g-4">
+                
+                <div class="col-md-6">
+                    <a href="{% url 'dietitian_post' %}" class="text-decoration-none">
+                        <div class="action-card">
+                            <div class="action-header-row">
+                                <div class="action-icon-box"><i class="ti ti-edit"></i></div>
+                                <h4>Create Post</h4>
+                            </div>
+                            <p>Publish verified nutritional tracks, diet maps, and organic health guidelines directly to application timelines.</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6">
+                    <a href="{% url 'edit_dietitian' %}" class="text-decoration-none">
+                        <div class="action-card">
+                            <div class="action-header-row">
+                                <div class="action-icon-box"><i class="ti ti-user-cog"></i></div>
+                                <h4>Edit Profile</h4>
+                            </div>
+                            <p>Adjust professional qualifications, hospital licensing parameters, address points, and practice bio cards.</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Technical Properties Grid -->
+                <div class="col-12">
+                    <div class="info-card">
+                        <h4><i class="ti ti-id-badge"></i> Professional Registration Dataset</h4>
+                        <div class="meta-data-list">
+                            <div class="meta-data-item">
+                                <span class="meta-label">Total Practice Term:</span>
+                                <span class="meta-value">{{dietitian.experience}}</span>
+                            </div>
+                            <div class="meta-data-item">
+                                <span class="meta-label">Core Clinical Focus:</span>
+                                <span class="meta-value">{{dietitian.skills}}</span>
+                            </div>
+                            <div class="meta-data-item">
+                                <span class="meta-label">Medical License Number:</span>
+                                <span class="meta-value text-muted">{{dietitian.registration_no}}</span>
+                            </div>
+                            <div class="meta-data-item">
+                                <span class="meta-label">Inbound Contact Route:</span>
+                                <span class="meta-value">{{dietitian.email}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ── Curated Operations Quote ── -->
+    <div class="quote-card">
+        <div class="quote-icon">
+            <i class="ti ti-scale-outline"></i>
+        </div>
+        <div>
+            <h3>Practitioner Directive</h3>
+            <p>Every small lifestyle change your patients incorporate into their routine is a direct byproduct of your scientific analysis. Keep driving modern evidence-based nutritional strategies and guide individuals toward long-term body composition optimization.</p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | DietDesk</title>
+    {% include 'diet_desk_app/common/cdn.html' %}
+
+    <style>
+        /* ── Base Styles ── */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ── About Page ── */
+        .about-hero {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            padding: 80px 20px 60px;
+            text-align: center;
+            border-bottom: 1px solid #d1fae5;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #bbf7d0;
+            color: #16a34a;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .about-hero h1 { 
+            font-size: 2.8rem; 
+            font-weight: 800; 
+            color: #0a1a0f; 
+            letter-spacing: -0.04em; 
+            margin: 0 0 16px 0; 
+        }
+        .about-hero h1 span { color: #16a34a; }
+        .about-hero p { max-width: 600px; margin: 0 auto; font-size: 1.1rem; color: #475569; line-height: 1.7; }
+        
+        .about-content { max-width: 1120px; margin: 60px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+        @media (max-width: 768px) {
+            .about-content { grid-template-columns: 1fr; gap: 40px; }
+        }
+        
+        .about-text h2 { font-size: 1.8rem; font-weight: 800; color: #0a1a0f; letter-spacing: -0.03em; margin-bottom: 16px; }
+        .about-text p { color: #475569; line-height: 1.8; margin-bottom: 16px; font-size: 0.95rem; }
+        .about-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding: 0; }
+        .about-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; color: #334155; }
+        .about-list li i { color: #22c55e; font-size: 18px; margin-top: 1px; flex-shrink: 0; }
+        
+        .values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        @media (max-width: 480px) {
+            .values-grid { grid-template-columns: 1fr; }
+        }
+        .value-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; }
+        .value-card i { font-size: 24px; color: #22c55e; margin-bottom: 10px; display: block; }
+        .value-card h3 { font-size: 0.9rem; font-weight: 700; color: #0a1a0f; margin-bottom: 6px; }
+        .value-card p { font-size: 0.82rem; color: #64748b; line-height: 1.6; margin: 0; }
+        
+        /* ── Team Section ── */
+        .team-section { max-width: 1120px; margin: 0 auto 80px; padding: 0 20px; }
+        .section-header { text-align: center; margin-bottom: 40px; }
+        .section-header .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .section-header h2 { font-size: 1.8rem; font-weight: 800; color: #0a1a0f; margin: 0 0 12px 0; }
+        .section-header p { max-width: 500px; margin: 0 auto; color: #64748b; font-size: 0.95rem; line-height: 1.6; }
+        
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .team-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 24px; text-align: center; transition: all 0.2s ease; }
+        .team-card:hover { border-color: #86efac; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(34,197,94,0.08); }
+        .avatar { width: 72px; height: 72px; border-radius: 50%; background: #f0fdf4; border: 3px solid #dcfce7; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; font-size: 1.4rem; font-weight: 800; color: #15803d; }
+        .team-card h3 { font-size: 0.95rem; font-weight: 700; color: #0a1a0f; margin: 0 0 4px 0; }
+        .team-card .role { font-size: 0.8rem; color: #22c55e; font-weight: 600; margin-bottom: 8px; }
+        .team-card p { font-size: 0.8rem; color: #64748b; line-height: 1.5; margin: 0; }
+    </style>
+</head>
+<body>
+    {% include 'diet_desk_app/common/navbar.html' %}
+
+    <!-- ══════════════ ABOUT PAGE ══════════════ -->
+    <div class="page-section" id="page-about">
+        
+        <!-- Hero Header -->
+        <div class="about-hero">
+            <div class="hero-badge"><i class="ti ti-info-circle"></i> Our Story</div>
+            <h1>We're on a mission to make<br><span>nutrition accessible</span> for all</h1>
+            <p>DietDesk was founded in 2022 by a team of nutritionists and tech enthusiasts who believed that good health shouldn't be a luxury.</p>
+        </div>
+
+        <!-- Main Copy & Values Section -->
+        <div class="about-content">
+            <div class="about-text">
+                <h2>Building a healthier India, one meal at a time</h2>
+                <p>At DietDesk, we bridge the gap between people and certified dietitians. Our platform makes it easy to get personalised, science-backed nutrition advice without the high costs and long waits of traditional consultations.</p>
+                <p>We understand that every person is unique — their body, lifestyle, food preferences, and health goals differ. That's why every plan on DietDesk is crafted individually, not generated from a template.</p>
+                
+                <ul class="about-list">
+                    <li><i class="ti ti-check"></i> 150+ certified dietitians across India</li>
+                    <li><i class="ti ti-check"></i> Personalised plans for 20+ health conditions</li>
+                    <li><i class="ti ti-check"></i> Plans available in Hindi, Tamil, Telugu &amp; more</li>
+                    <li><i class="ti ti-check"></i> Affordable pricing starting at ₹499/month</li>
+                    <li><i class="ti ti-check"></i> 12,000+ satisfied users since launch</li>
+                </ul>
+            </div>
+
+            <div class="values-grid">
+                <div class="value-card">
+                    <i class="ti ti-heart"></i>
+                    <h3>Empathy first</h3>
+                    <p>We listen before we prescribe. Your comfort matters as much as your nutrition.</p>
+                </div>
+                <div class="value-card">
+                    <i class="ti ti-microscope"></i>
+                    <h3>Science-backed</h3>
+                    <p>Every recommendation is rooted in evidence-based nutritional science.</p>
+                </div>
+                <div class="value-card">
+                    <i class="ti ti-shield-check"></i>
+                    <h3>Privacy &amp; trust</h3>
+                    <p>Your health data is yours. We never sell or share your personal information.</p>
+                </div>
+                <div class="value-card">
+                    <i class="ti ti-globe"></i>
+                    <h3>Accessible to all</h3>
+                    <p>We design our plans to work for all income levels, regions, and dietary needs.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

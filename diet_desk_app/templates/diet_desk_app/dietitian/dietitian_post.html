@@ -1,0 +1,223 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post | DietDesk</title>
+
+    <!-- Typography & Custom Vector Icon Suite -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+    {% include 'diet_desk_app/common/cdn.html' %}
+
+    <style>
+        /* ── Dynamic Ambient Canvas ── */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #0f172a;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f9f5;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(34, 197, 94, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(134, 239, 172, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .canvas-container {
+            width: 100%;
+            max-width: 840px;
+            margin: 60px auto;
+            padding: 0 24px;
+            box-sizing: border-box;
+        }
+
+        /* ── Glassmorphic Workspace Card ── */
+        .post-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 50px 40px;
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 20px 50px rgba(34, 197, 94, 0.03), 0 4px 24px rgba(0, 0, 0, 0.01);
+            box-sizing: border-box;
+        }
+
+        .header-tray {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .composer-icon {
+            font-size: 2rem;
+            color: #16a34a;
+            background: #f0fdf4;
+            padding: 14px;
+            border-radius: 20px;
+            display: inline-flex;
+            margin-bottom: 16px;
+            border: 1px solid rgba(34, 197, 94, 0.15);
+        }
+
+        .page-title {
+            color: #0a1a0f;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin: 0;
+        }
+
+        .page-title span {
+            color: #22c55e;
+        }
+
+        .page-subtitle {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 500;
+            margin: 8px 0 0 0;
+        }
+
+        /* ── Workspace Core Form Field ── */
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .form-label {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-label i {
+            color: #16a34a;
+            font-size: 1.2rem;
+        }
+
+        .post-box {
+            width: 100%;
+            border-radius: 20px;
+            border: 1px solid #cbd5e1;
+            padding: 24px;
+            font-family: inherit;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #0f172a;
+            background: #ffffff;
+            box-sizing: border-box;
+            outline: none;
+            resize: none;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01) inset;
+        }
+
+        .post-box::placeholder {
+            color: #94a3b8;
+        }
+
+        .post-box:focus {
+            border-color: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12), 0 4px 20px rgba(34, 197, 94, 0.02);
+            background: #ffffff;
+        }
+
+        /* ── Action Control Shelf ── */
+        .actions-shelf {
+            text-align: right;
+        }
+
+        .submit-btn {
+            background: #0f172a;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 0 40px;
+            height: 54px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .submit-btn:hover {
+            background: #22c55e;
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.25);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 640px) {
+            .post-card {
+                padding: 36px 20px;
+            }
+            .page-title {
+                font-size: 2rem;
+            }
+            .submit-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    {% include 'diet_desk_app/dietitian/dietitian_navbar.html' %}
+
+    <div class="canvas-container">
+        <div class="post-card">
+            
+            <!-- Header Decorative Track -->
+            <div class="header-tray">
+                <div class="composer-icon">
+                    <i class="ti ti-blockquote"></i>
+                </div>
+                <h1 class="page-title">Create <span>Post</span></h1>
+                <p class="page-subtitle">Publish verified guidelines and medical advice directly to user feeds.</p>
+            </div>
+
+            <!-- Composer Form Module -->
+            <form method="POST" action="/dietitian_post/">
+                {% csrf_token %}
+
+                <div class="field-group">
+                    <label class="form-label">
+                        <i class="ti ti-bulb"></i> Share Diet Tip / Health Advice
+                    </label>
+                    
+                    <textarea
+                        name="post"
+                        rows="8"
+                        class="form-control post-box"
+                        placeholder="What wellness strategy or clinical tip would you like to pass on to your clients today?..."
+                        required></textarea>
+                </div>
+
+                <!-- Submission Controller Strip -->
+                <div class="actions-shelf">
+                    <button type="submit" class="submit-btn">
+                        Publish Article <i class="ti ti-arrow-up-right"></i>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

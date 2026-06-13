@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet Plans</title>
+    {% include 'diet_desk_app/common/cdn.html' %}
+    <style>
+        :root {
+            --primary: #16a34a;
+            --primary-hover: #15803d;
+            --primary-light: #f0fdf4;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --radius-lg: 16px;
+            --radius-sm: 8px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            background-color: #f8fafc;
+            color: var(--text-dark);
+        }
+
+        /* ── Diet Plans Page ── */
+        .plans-hero {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            padding: 80px 20px 60px;
+            text-align: center;
+            border-bottom: 1px solid #d1fae5;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fff;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-hover);
+            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.08);
+            margin-bottom: 20px;
+            border: 1px solid #bbf7d0;
+        }
+
+        .plans-hero h1 { 
+            font-size: 3rem; 
+            font-weight: 800; 
+            color: #0a1a0f; 
+            letter-spacing: -0.04em; 
+            margin: 0 0 16px 0; 
+            line-height: 1.15;
+        }
+        .plans-hero h1 span { color: var(--primary); }
+        .plans-hero p { max-width: 600px; margin: 0 auto; font-size: 1.1rem; color: #475569; line-height: 1.7; }
+
+        .filter-tabs { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 40px 20px 40px; }
+        .filter-tab { 
+            padding: 10px 24px; 
+            border-radius: 999px; 
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            border: 1px solid var(--border-color); 
+            background: #fff; 
+            color: var(--text-muted); 
+            transition: var(--transition); 
+        }
+        .filter-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 12px rgba(34,197,94,0.25); }
+        .filter-tab:hover:not(.active) { background: #f1f5f9; color: var(--text-dark); border-color: #cbd5e1; }
+
+        .plans-grid { 
+            max-width: 1200px; 
+            margin: 0 auto 80px; 
+            padding: 0 20px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            gap: 28px; 
+        }
+        
+        .plan-card { 
+            background: #fff; 
+            border: 1px solid var(--border-color); 
+            border-radius: var(--radius-lg); 
+            overflow: hidden; 
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition); 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.02);
+        }
+        .plan-card:hover { border-color: #86efac; transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgba(34,197,94,0.1), 0 10px 10px -5px rgba(34,197,94,0.04); }
+        .plan-card.featured { border: 2px solid var(--primary); position: relative; }
+        
+        .plan-img { height: 180px; display: flex; align-items: center; justify-content: center; font-size: 4.5rem; position: relative; }
+        .plan-img.green-bg { background: linear-gradient(135deg, #f0fdf4, #bbf7d0); }
+        .plan-img.blue-bg { background: linear-gradient(135deg, #eff6ff, #bfdbfe); }
+        .plan-img.amber-bg { background: linear-gradient(135deg, #fffbeb, #fef3c7); }
+        .plan-img.pink-bg { background: linear-gradient(135deg, #fdf2f8, #fbcfe8); }
+        .plan-img.teal-bg { background: linear-gradient(135deg, #f0fdfa, #99f6e4); }
+        .plan-img.purple-bg { background: linear-gradient(135deg, #faf5ff, #e9d5ff); }
+        
+        .featured-badge { position: absolute; top: 16px; right: 16px; background: var(--primary); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 6px 14px; border-radius: 999px; letter-spacing: 0.04em; text-transform: uppercase; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        
+        .plan-body { padding: 24px; flex-grow: 1; display: flex; flex-direction: column; }
+        .plan-body h3 { font-size: 1.2rem; font-weight: 700; color: #0a1a0f; margin: 0 0 8px 0; }
+        .plan-body .plan-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin: 0 0 18px 0; flex-grow: 1; }
+        
+        .plan-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+        .plan-tag { font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
+        .tag-green { background: #dcfce7; color: #15803d; }
+        .tag-blue { background: #dbeafe; color: #1d4ed8; }
+        .tag-amber { background: #fef3c7; color: #92400e; }
+        .tag-purple { background: #ede9fe; color: #6d28d9; }
+        
+        .plan-meta { display: flex; justify-content: space-between; gap: 8px; padding-top: 16px; border-top: 1px solid #f1f5f9; }
+        .plan-meta-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+        .plan-meta-item i { font-size: 16px; color: var(--primary); }
+        
+        .plan-cta { margin: 0 24px 24px; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--primary-light); color: var(--primary-hover); font-size: 0.9rem; font-weight: 700; padding: 12px; border-radius: var(--radius-sm); text-decoration: none; border: 1px solid #dcfce7; transition: var(--transition); }
+        .plan-cta:hover { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 12px rgba(34,197,94,0.15); }
+    </style>
+</head>
+<body>
+
+    {% include 'diet_desk_app/common/navbar.html' %}
+
+    <!-- ══════════════ DIET PLANS PAGE ══════════════ -->
+    <div class="page-section" id="page-plans">
+        <div class="plans-hero">
+            <div class="hero-badge"><i class="ti ti-salad"></i> Diet Plans</div>
+            <h1>Find the plan that's<br><span>right for you</span></h1>
+            <p>Explore our expert-crafted diet plans for weight loss, muscle gain, diabetes management, and more — all designed for Indian lifestyles.</p>
+        </div>
+
+        <!-- Added 'data-filter' identifiers for filtering functionality -->
+        <div class="filter-tabs">
+            <div class="filter-tab active" data-filter="all">All Plans</div>
+            <div class="filter-tab" data-filter="weight-loss">Weight Loss</div>
+            <div class="filter-tab" data-filter="muscle-gain">Muscle Gain</div>
+            <div class="filter-tab" data-filter="medical">Medical</div>
+            <div class="filter-tab" data-filter="vegetarian">Vegetarian</div>
+        </div>
+
+        <!-- Added corresponding data-category tags to link with filter -->
+        <div class="plans-grid">
+            <div class="plan-card featured" data-category="weight-loss">
+                <div class="plan-img green-bg">🥗<span class="featured-badge">Popular</span></div>
+                <div class="plan-body">
+                    <h3>Weight Loss Kickstart</h3>
+                    <p class="plan-desc">A structured 12-week plan to help you lose 8–12 kg through balanced calorie deficit and Indian meal options.</p>
+                    <div class="plan-tags"><span class="plan-tag tag-green">Weight Loss</span><span class="plan-tag tag-blue">Beginner</span></div>
+                    <div class="plan-meta">
+                        <div class="plan-meta-item"><i class="ti ti-clock"></i>12 weeks</div>
+                        <div class="plan-meta-item"><i class="ti ti-flame"></i>1400–1600 kcal</div>
+                        <div class="plan-meta-item"><i class="ti ti-currency-rupee"></i>799/mo</div>
+                    </div>
+                </div>
+                <a href="#" class="plan-cta">View Plan <i class="ti ti-arrow-right"></i></a>
+            </div>
+
+            <div class="plan-card" data-category="muscle-gain">
+                <div class="plan-img blue-bg">💪</div>
+                <div class="plan-body">
+                    <h3>Muscle Gain Pro</h3>
+                    <p class="plan-desc">High-protein, calorie-surplus plan designed for gym-goers who want lean muscle gains without excess fat.</p>
+                    <div class="plan-tags"><span class="plan-tag tag-blue">Muscle Gain</span><span class="plan-tag tag-purple">Advanced</span></div>
+                    <div class="plan-meta">
+                        <div class="plan-meta-item"><i class="ti ti-clock"></i>16 weeks</div>
+                        <div class="plan-meta-item"><i class="ti ti-flame"></i>2800–3200 kcal</div>
+                        <div class="plan-meta-item"><i class="ti ti-currency-rupee"></i>999/mo</div>
+                    </div>
+                </div>
+                <a href="#" class="plan-cta">View Plan <i class="ti ti-arrow-right"></i></a>
+            </div>
+
+            <div class="plan-card" data-category="medical vegetarian">
+                <div class="plan-img amber-bg">🩺</div>
+                <div class="plan-body">
+                    <h3>Diabetes Management</h3>
+                    <p class="plan-desc">A low glycemic index plan reviewed by endocrinologists to help control blood sugar through everyday Indian foods.</p>
+                    <div class="plan-tags"><span class="plan-tag tag-amber">Medical</span><span class="plan-tag tag-green">Vegetarian</span></div>
+                    <div class="plan-meta">
+                        <div class="plan-meta-item"><i class="ti ti-clock"></i>Ongoing</div>
+                        <div class="plan-meta-item"><i class="ti ti-flame"></i>1600–1800 kcal</div>
+                        <div class="plan-meta-item"><i class="ti ti-currency-rupee"></i>1199/mo</div>
+                    </div>
+                </div>
+                <a href="#" class="plan-cta">View Plan <i class="ti ti-arrow-right"></i></a>
+            </div>
+
+            <div class="plan-card" data-category="medical">
+                <div class="plan-img pink-bg">🌸</div>
+                <div class="plan-body">
+                    <h3>PCOS Wellness Plan</h3>
+                    <p class="plan-desc">Hormone-balancing nutrition plan for women with PCOS — anti-inflammatory, low sugar, and easy to follow.</p>
+                    <div class="plan-tags"><span class="plan-tag tag-purple">Women's Health</span><span class="plan-tag tag-amber">Medical</span></div>
+                    <div class="plan-meta">
+                        <div class="plan-meta-item"><i class="ti ti-clock"></i>8 weeks</div>
+                        <div class="plan-meta-item"><i class="ti ti-flame"></i>1500–1700 kcal</div>
+                        <div class="plan-meta-item"><i class="ti ti-currency-rupee"></i>999/mo</div>
+                    </div>
+                </div>
+                <a href="#" class="plan-cta">View Plan <i class="ti ti-arrow-right"></i></a>
+            </div>
+
+            <div class="plan-card" data-category="medical">
+                <div class="plan-img teal-bg">🫀</div>
+                <div class="plan-body">
+                    <h3>Heart-Healthy Diet</h3>
+                    <p class="plan-desc">Low sodium, low saturated fat plan to support cardiovascular health — approved by cardiologists.</p>
+                    <div class="plan-tags"><span class="plan-tag tag-blue">Medical</span><span class="plan-tag tag-green">Heart Health</span></div>
+                    <div class="plan-meta">
+                        <div class="plan-meta-item"><i class="ti ti-clock"></i>Ongoing</div>
+                        <div class="plan-meta-item"><i class="ti ti-flame"></i>1700–1900 kcal</div>
+                        <div class="plan-meta-item"><i class="ti ti-currency-rupee"></i>1099/mo</div>
+                    </div>
+                </div>
+                <a href="#" class="plan-cta">View Plan <i class="ti ti-arrow-right"></i></a>
+            </div>
+
+            <div class="plan-card" data-category="all">
+                <div class="plan-img purple-bg">🧘</div>
+                <div class="plan-body">
+                    <h3>Balanced Lifestyle Plan</h3>
+                    <p class="plan-desc">For those who simply want to eat healthier without a specific goal — balanced macros, flexible, and sustainable.</p>
+                    <div class="plan-tags"><span class="plan-tag tag-green">Beginner</span><span class="plan-tag tag-blue">Flexible</span></div>
+                    <div class="plan-meta">
+                        <div class="plan-meta-item"><i class="ti ti-clock"></i>4 weeks</div>
+                        <div class="plan-meta-item"><i class="ti ti-flame"></i>1800–2200 kcal</div>
+                        <div class="plan-meta-item"><i class="ti ti-currency-rupee"></i>499/mo</div>
+                    </div>
+                </div>
+                <a href="#" class="plan-cta">View Plan <i class="ti ti-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ── Dynamic Filter logic ── */
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Handle tab styling toggle
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                const filterValue = this.getAttribute('data-filter');
+                const cards = document.querySelectorAll('.plan-card');
+
+                // Card Visibility Control
+                cards.forEach(card => {
+                    const cardCategories = card.getAttribute('data-category') || '';
+                    if (filterValue === 'all' || cardCategories.includes(filterValue)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

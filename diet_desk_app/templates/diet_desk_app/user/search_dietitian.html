@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Dietitian</title>
+    {% include 'diet_desk_app/common/cdn.html' %}
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+    <style>
+        /* ── Dynamic Mesh Background ── */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #0f172a;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f9f5;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(34, 197, 94, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(134, 239, 172, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Ambient moving light blobs for visual depth */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: rgba(34, 197, 94, 0.06);
+            filter: blur(100px);
+            z-index: -1;
+            animation: floatGlow 12s infinite alternate ease-in-out;
+        }
+        body::before { top: 20%; left: -10%; }
+        body::after { bottom: 10%; right: -10%; background: rgba(56, 189, 248, 0.05); animation-delay: -6s; }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 40px) scale(1.15); }
+        }
+
+        /* Container utility */
+        .custom-container {
+            width: 100%;
+            max-width: 1140px;
+            margin: 48px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* ── Modern Glass Search Hero Card ── */
+        .search-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 60px 40px;
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 20px 50px rgba(34, 197, 94, 0.04), 0 4px 24px rgba(0, 0, 0, 0.02);
+            box-sizing: border-box;
+        }
+
+        .search-title {
+            color: #0a1a0f;
+            font-size: 2.75rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            text-align: center;
+            margin: 0 0 8px 0;
+        }
+
+        .search-title span {
+            color: #16a34a;
+        }
+
+        .search-subtitle {
+            font-size: 1.05rem;
+            color: #64748b;
+            font-weight: 500;
+            text-align: center;
+            margin: 0 0 32px 0;
+        }
+
+        /* ── Search Bar Input Wrapper ── */
+        .search-group {
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(34, 197, 94, 0.15);
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.04);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-sizing: border-box;
+        }
+
+        .search-group:focus-within {
+            border-color: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+        }
+
+        .search-input-field {
+            flex: 1;
+            height: 54px;
+            border: none;
+            outline: none;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 0 12px 0 20px;
+            color: #0f172a;
+            background: transparent;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .search-input-field::placeholder {
+            color: #94a3b8;
+        }
+
+        .search-btn {
+            height: 54px;
+            padding: 0 32px;
+            border: none;
+            border-radius: 14px;
+            background: #22c55e;
+            color: white;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .search-btn:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .search-group {
+                flex-direction: column;
+                padding: 12px;
+                border-radius: 24px;
+            }
+            .search-input-field {
+                padding: 0 12px;
+                text-align: center;
+            }
+            .search-btn {
+                width: 100%;
+            }
+            .search-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* ── Premium Glassmorphism Dietitian Cards ── */
+        .dietitian-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+            margin-top: 50px;
+        }
+
+        .dietitian-col {
+            flex: 1 1 calc(33.333% - 19px);
+            min-width: 290px;
+            box-sizing: border-box;
+        }
+
+        .dietitian-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 32px 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.015);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .dietitian-card:hover {
+            transform: translateY(-10px);
+            background: #ffffff;
+            border-color: rgba(34, 197, 94, 0.25);
+            box-shadow: 0 30px 50px rgba(34, 197, 94, 0.08);
+        }
+
+        .img-wrapper {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 18px auto;
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            position: relative;
+            z-index: 2;
+        }
+
+        .img-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #86efac);
+            z-index: 1;
+        }
+
+        .dietitian-card h3 {
+            color: #0a1a0f;
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin: 0 0 6px 0;
+            letter-spacing: -0.02em;
+        }
+
+        .qualification {
+            color: #16a34a;
+            font-weight: 600;
+            font-size: 0.85rem;
+            background: rgba(34, 197, 94, 0.08);
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 999px;
+            margin-bottom: 24px;
+        }
+
+        .details {
+            text-align: left;
+            background: rgba(248, 250, 252, 0.7);
+            border: 1px solid rgba(241, 245, 249, 0.5);
+            padding: 18px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+
+        .details p {
+            margin: 0 0 12px 0;
+            font-size: 0.9rem;
+            color: #475569;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .details p:last-child {
+            margin-bottom: 0;
+        }
+
+        .details strong {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .profile-btn {
+            background: #0f172a;
+            color: white;
+            border-radius: 14px;
+            padding: 14px 24px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border: none;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+        }
+
+        .profile-btn:hover {
+            background: #22c55e;
+            color: white;
+            box-shadow: 0 6px 18px rgba(34, 197, 94, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .empty-state {
+            width: 100%;
+            text-align: center;
+            padding: 60px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px dashed rgba(34, 197, 94, 0.3);
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    {% include 'diet_desk_app/user/user_navbar.html' %}
+
+    <div class="custom-container">
+        <div class="search-wrapper">
+            <div class="search-card">
+                <h1 class="search-title">Find Your <span>Dietitian</span></h1>
+                <p class="search-subtitle">Discover verified expert nutritionists in your city</p>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="search-group">
+                        <input type="text"
+                               name="city"
+                               class="search-input-field"
+                               placeholder="Which city are you looking in? (e.g., Lucknow)"
+                               value="{{ request.POST.city }}">
+                        <button type="submit" class="search-btn">
+                            <i class="ti ti-search"></i> Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="dietitian-grid">
+            {% for d in d %}
+            <div class="dietitian-col">
+                <div class="dietitian-card">
+                    <div class="img-wrapper">
+                        <img src="{{d.profile_pic.url}}" class="profile-img" alt="{{d.name}}">
+                    </div>
+
+                    <h3>{{d.name}}</h3>
+                    <div>
+                        <span class="qualification">{{d.qualification}}</span>
+                    </div>
+
+                    <div class="details">
+                        <p>
+                            <span><strong>Experience:</strong></span> 
+                            <span>{{d.experience}}</span>
+                        </p>
+                        <p>
+                            <span><strong>City:</strong></span> 
+                            <span>{{d.city}}</span>
+                        </p>
+                        <p>
+                            <span><strong>Expertise:</strong></span> 
+                            <span style="max-width: 60%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{d.skills}}</span>
+                        </p>
+                    </div>
+
+                    <a href="#" class="profile-btn">
+                        View Full Profile <i class="ti ti-arrow-up-right"></i>
+                    </a>
+                </div>
+            </div>
+        
+            {% endfor %}
+        </div>
+         {% for msg in messages%}
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="width: 40%; margin: auto; margin-top: 4%; text-align: center;">
+  <strong style="color:black;">{{msg}}</strong> 
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+    {%endfor%}
+    </div>
+</body>
+</html>

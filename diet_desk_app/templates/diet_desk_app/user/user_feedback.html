@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - DietDesk</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
+    {% include 'diet_desk_app/common/cdn.html' %}
+
+    <style>
+        /* ── Dynamic Ambient Mesh Canvas ── */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #0f172a;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f9f5;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(34, 197, 94, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(134, 239, 172, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .canvas-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 24px;
+            box-sizing: border-box;
+        }
+
+        /* ── Glassmorphic Feedback Card ── */
+        .feedback-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 50px 40px;
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 20px 50px rgba(34, 197, 94, 0.03), 0 4px 24px rgba(0, 0, 0, 0.01);
+            box-sizing: border-box;
+        }
+
+        .form-title {
+            color: #0a1a0f;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin: 0 0 8px 0;
+        }
+
+        .form-title span {
+            color: #22c55e;
+        }
+
+        .form-subtitle {
+            font-size: 1.05rem;
+            color: #64748b;
+            font-weight: 500;
+            margin: 0 0 40px 0;
+        }
+
+        /* ── Form Inputs Configuration ── */
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-label i {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .custom-input, .custom-textarea {
+            width: 100%;
+            border-radius: 16px;
+            border: 1px solid #cbd5e1;
+            padding: 0 20px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #0f172a;
+            background: #ffffff;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .custom-input {
+            height: 54px;
+        }
+
+        .custom-textarea {
+            padding: 16px 20px;
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .custom-input:focus, .custom-textarea:focus {
+            border-color: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+        }
+
+        /* ── Interactive UX Star Selector Grid ── */
+        .rating-matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .rating-tile {
+            position: relative;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 14px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+        }
+
+        .rating-tile .tile-stars {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+            letter-spacing: -2px;
+        }
+
+        .rating-tile .tile-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        /* Hide Native Select Radio Inputs safely */
+        .rating-tile input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* Live State Styling */
+        .rating-tile:hover {
+            border-color: #bbf7d0;
+            background: #f0fdf4;
+            transform: translateY(-2px);
+        }
+
+        .rating-tile.selected-state {
+            background: #f0fdf4;
+            border-color: #22c55e;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.08);
+        }
+
+        .rating-tile.selected-state .tile-label {
+            color: #15803d;
+        }
+
+        /* ── Submission Module ── */
+        .actions-tray {
+            margin-top: 36px;
+            text-align: center;
+        }
+
+        .submit-btn {
+            background: #0f172a;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 0 40px;
+            height: 54px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .submit-btn:hover {
+            background: #22c55e;
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Custom Notification Toast */
+        .custom-alert {
+            background: #ffffff;
+            border-left: 4px solid #22c55e;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+            margin-bottom: 24px;
+            padding: 16px 20px;
+        }
+
+        @media (max-width: 640px) {
+            .rating-matrix {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            .rating-tile {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 14px 20px;
+            }
+            .rating-tile .tile-stars {
+                margin-bottom: 0;
+            }
+            .feedback-card {
+                padding: 32px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'diet_desk_app/user/user_navbar.html' %}
+
+    <div class="canvas-container">
+        
+        {% for msg in messages %}
+        <div class="alert custom-alert alert-dismissible fade show" role="alert">
+            <div class="d-flex align-items-center gap-2">
+                <i class="ti ti-circle-check-filled text-success fs-5"></i>
+                <strong style="color: #0f172a; font-weight: 600;">{{msg}}</strong>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+
+        <div class="feedback-card">
+            <h1 class="text-center form-title">Share Your <span>Feedback</span></h1>
+            <p class="text-center form-subtitle">We value your insights. Help us improve the DietDesk ecosystem.</p>
+
+            <form method="POST" action="/user_feedback/">
+                {% csrf_token %}
+
+                <div class="field-group">
+                    <label class="form-label"><i class="ti ti-edit"></i> Subject</label>
+                    <input type="text"
+                           name="subject"
+                           class="custom-input"
+                           placeholder="What is the context of your feedback?"
+                           required>
+                </div>
+
+                <div class="field-group">
+                    <label class="form-label"><i class="ti ti-star"></i> Overall Experience</label>
+                    <div class="rating-matrix">
+                        
+                        <label class="rating-tile selected-state">
+                            <input type="radio" name="rating" value="⭐⭐⭐⭐⭐ Excellent" checked>
+                            <span class="tile-stars">⭐⭐⭐⭐⭐</span>
+                            <span class="tile-label">Excellent</span>
+                        </label>
+
+                        <label class="rating-tile">
+                            <input type="radio" name="rating" value="⭐⭐⭐⭐ Good">
+                            <span class="tile-stars">⭐⭐⭐⭐</span>
+                            <span class="tile-label">Good</span>
+                        </label>
+
+                        <label class="rating-tile">
+                            <input type="radio" name="rating" value="⭐⭐⭐ Average">
+                            <span class="tile-stars">⭐⭐⭐</span>
+                            <span class="tile-label">Average</span>
+                        </label>
+
+                        <label class="rating-tile">
+                            <input type="radio" name="rating" value="⭐⭐ Poor">
+                            <span class="tile-stars">⭐⭐</span>
+                            <span class="tile-label">Poor</span>
+                        </label>
+
+                        <label class="rating-tile">
+                            <input type="radio" name="rating" value="⭐ Very Poor">
+                            <span class="tile-stars">⭐</span>
+                            <span class="tile-label">Very Poor</span>
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="form-label"><i class="ti ti-message-2"></i> Detailed Thoughts</label>
+                    <textarea name="feedback"
+                              class="custom-textarea"
+                              placeholder="Tell us what you loved, or what we can fix to make your experience better..."
+                              required></textarea>
+                </div>
+
+                <div class="actions-tray">
+                    <button type="submit" class="submit-btn">
+                        Send Feedback <i class="ti ti-send"></i>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.rating-tile').forEach(tile => {
+            tile.addEventListener('click', function() {
+                document.querySelectorAll('.rating-tile').forEach(t => t.classList.remove('selected-state'));
+                this.classList.add('selected-state');
+            });
+        });
+    </script>
+</body>
+</html>

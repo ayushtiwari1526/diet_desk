@@ -1,0 +1,196 @@
+<style>
+  /* ── Premium Advanced Glassmorphic Navbar ── */
+  .navbar-custom {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(24px) id;
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 30px rgba(34, 197, 94, 0.03), 0 1px 0 rgba(0, 0, 0, 0.02);
+    padding: 12px 0;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-brand-custom {
+    font-size: 1.45rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: #0a1a0f !important;
+    text-decoration: none;
+  }
+  .navbar-brand-custom span {
+    color: #16a34a;
+  }
+
+  /* ── Interactive Nav Items ── */
+  .nav-link-custom {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #475569 !important;
+    padding: 8px 18px !important;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-link-custom:hover {
+    color: #0f172a !important;
+    background: rgba(34, 197, 94, 0.06);
+  }
+
+  /* Smooth dynamic highlight indicator pill */
+  .nav-link-custom.active {
+    color: #15803d !important;
+    background: rgba(34, 197, 94, 0.09);
+  }
+
+  .nav-link-custom.active::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 2px;
+    background: #22c55e;
+    border-radius: 999px;
+  }
+
+  /* ── Right Side Control Deck ── */
+  .avatar-frame {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    display: inline-block;
+  }
+
+  .profile-circle-custom {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    position: relative;
+    z-index: 2;
+  }
+
+  .avatar-frame::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #22c55e, #86efac);
+    z-index: 1;
+  }
+
+  .logout-btn-custom {
+    background: #0f172a;
+    color: white !important;
+    border-radius: 12px;
+    padding: 10px 22px;
+    border: none;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .logout-btn-custom:hover {
+    background: #cb2424;
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(203, 36, 36, 0.25);
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light navbar-custom sticky-top">
+  <div class="container">
+
+    <!-- Logo -->
+    <a class="navbar-brand-custom" href="/user_home/">
+      Diet<span>Desk</span>
+    </a>
+
+    <!-- Mobile Menu Toggle Button -->
+    <button class="navbar-toggler border-0"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            style="outline: none; box-shadow: none;">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Nav Target Links Wrapper -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      
+      <ul class="navbar-nav mx-auto gap-1 my-3 my-lg-0">
+        <li class="nav-item">
+          <a class="nav-link-custom" id="nav-home" href="/user_home/">
+            <i class="ti ti-home"></i> Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link-custom" id="nav-search" href="/search_dietitian">
+            <i class="ti ti-search"></i> Search Dietitian
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link-custom" id="nav-edit" href="/edit_user/">
+            <i class="ti ti-user-cog"></i> Edit Profile
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link-custom" id="nav-feedback" href="/user_feedback/">
+            <i class="ti ti-message-heart"></i> Feedback
+          </a>
+        </li>
+      </ul>
+
+      <!-- Right Side Account Control Deck -->
+      <div class="d-flex align-items-center gap-3">
+        <!-- Live Profile Picture Wrapper Ring -->
+        <a href="/edit_user/" class="avatar-frame" title="Manage Account Settings">
+          <img src="{{user.profile_pic.url}}" alt="Profile Avatar" class="profile-circle-custom">
+        </a>
+
+        <!-- Logout Action Button -->
+        <a href="/logout/" class="logout-btn-custom">
+          Logout <i class="ti ti-logout"></i>
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</nav>
+
+<!-- ── Auto-Sensing Link Match Engine Script ── -->
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const activeRoute = window.location.pathname;
+
+    // Remove pre-baked template states carefully
+    document.querySelectorAll('.nav-link-custom').forEach(el => el.classList.remove('active'));
+
+    // Route matching rules
+    if (activeRoute.includes('/user_home/')) {
+      document.getElementById('nav-home')?.classList.add('active');
+    } else if (activeRoute.includes('/search_dietitian')) {
+      document.getElementById('nav-search')?.classList.add('active');
+    } else if (activeRoute.includes('/edit_user/')) {
+      document.getElementById('nav-edit')?.classList.add('active');
+    } else if (activeRoute.includes('/user_feedback/')) {
+      document.getElementById('nav-feedback')?.classList.add('active');
+    }
+  });
+</script>

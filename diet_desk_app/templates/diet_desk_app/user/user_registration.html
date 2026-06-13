@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet Desk - Elite Registration</title>
+    {% include 'diet_desk_app/common/cdn.html' %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-dark: #061811;
+            --emerald-premium: #15803d;
+            --emerald-bright: #22c55e;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-subtle: rgba(15, 23, 42, 0.06);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+            
+            /* High-End Clean Studio Light Base */
+            background-color: #f3f7f4;
+            background-image: 
+                radial-gradient(at 0% 100%, rgba(34, 197, 94, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* Top Luxury Emerald Section to blend with Transparent Nav */
+        .register-top-hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 380px;
+            background: linear-gradient(135deg, #091e16 0%, #123e2c 100%);
+            z-index: -2;
+        }
+
+        .register-top-hero-bg::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: linear-gradient(to bottom, transparent, #f3f7f4);
+            pointer-events: none;
+        }
+
+        /* Fluid Premium Blur Orbs */
+        .premium-blur-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.5;
+            animation: fluidMotion 25s infinite alternate ease-in-out;
+            bottom: 10%;
+            right: -5%;
+            width: 500px;
+            height: 500px;
+            background: rgba(34, 197, 94, 0.12);
+        }
+
+        @keyframes fluidMotion {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -40px) scale(1.05); }
+            100% { transform: translate(-20px, 20px) scale(0.98); }
+        }
+
+        /* EMBEDDED TRANSPARENT NAVBAR OVERRIDES FOR THIS PAGE */
+        .navbar-custom {
+            background: transparent !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .navbar-scrolled {
+            background: rgba(255, 255, 255, 0.82) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(15, 45, 34, 0.06);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+            padding: 12px 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff !important;
+            letter-spacing: -0.04em;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-scrolled .navbar-brand {
+            color: #091e16 !important;
+        }
+
+        .navbar-brand span {
+            color: #22c55e;
+        }
+
+        .nav-link {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85) !important;
+            margin: 0 4px;
+            padding: 8px 16px !important;
+            border-radius: 12px;
+            transition: all 0.25s ease;
+        }
+
+        .navbar-scrolled .nav-link {
+            color: #475569 !important;
+        }
+
+        .nav-link:hover {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-scrolled .nav-link:hover {
+            color: #091e16 !important;
+            background: rgba(34, 197, 94, 0.08);
+        }
+
+        .nav-link.active {
+            color: #ffffff !important;
+            background: rgba(34, 197, 94, 0.25);
+        }
+
+        .navbar-scrolled .nav-link.active {
+            color: #16a34a !important;
+            background: rgba(34, 197, 94, 0.12);
+        }
+
+        /* Action Buttons & Switches */
+        .premium-switch-box {
+            background: rgba(255, 255, 255, 0.12);
+            padding: 4px;
+            border-radius: 14px;
+            display: inline-flex;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-scrolled .premium-switch-box {
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+        }
+
+        .switch-pill {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            height: calc(100% - 8px);
+            width: 65px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+        }
+
+        .switch-label {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+            transition: color 0.25s ease;
+        }
+
+        .navbar-scrolled .switch-label {
+            color: #64748b;
+        }
+
+        .btn-login {
+            border-radius: 12px;
+            padding: 10px 22px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .btn-login:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        .navbar-scrolled .btn-login {
+            color: #334155;
+            border-color: #e2e8f0;
+            background: #ffffff;
+        }
+
+        .navbar-scrolled .btn-login:hover {
+            background-color: #f8fafc;
+            color: #091e16;
+        }
+
+        .btn-signup {
+            border-radius: 12px;
+            padding: 10px 22px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: none;
+            background: #22c55e;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Split Screen Form Architecture Adjustments */
+        .main-content-area {
+            margin-top: 40px; /* Shifts content smoothly below transparent layout header area */
+            z-index: 5;
+        }
+
+        .split-wrapper {
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 
+                0 10px 30px -10px rgba(6, 24, 17, 0.05),
+                0 30px 70px -20px rgba(6, 24, 17, 0.12);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .brand-panel {
+            background: linear-gradient(145deg, #04120e 0%, #0b291d 100%);
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        .brand-panel::before {
+            content: "";
+            position: absolute;
+            top: -10%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(34, 197, 94, 0.25) 0%, transparent 70%);
+            filter: blur(30px);
+        }
+
+        .mini-glass-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .mini-glass-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(34, 197, 94, 0.25);
+        }
+
+        .form-panel {
+            padding: 50px;
+            background: #ffffff;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            letter-spacing: -0.03em;
+        }
+
+        .input-group-premium {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .field-label {
+            display: block;
+            color: #475569;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .custom-input {
+            height: 48px;
+            border-radius: 10px;
+            border: 1.5px solid #e2e8f0;
+            background-color: #f8fafc;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            padding: 0 16px 0 44px;
+            transition: all 0.2s ease;
+        }
+
+        .custom-input:focus {
+            border-color: var(--emerald-bright);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+            color: var(--text-dark);
+        }
+
+        .field-icon {
+            position: absolute;
+            left: 16px;
+            bottom: 15px;
+            color: #94a3b8;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+            pointer-events: none;
+        }
+
+        .input-group-premium:focus-within .field-icon {
+            color: var(--emerald-bright);
+        }
+
+        .custom-input[type="file"] {
+            padding: 8px 16px 0 44px;
+            font-size: 0.9rem;
+        }
+
+        .custom-input[type="file"]::file-selector-button {
+            background-color: var(--primary-dark);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 3px 12px;
+            margin-right: 12px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .register-btn {
+            width: 100%;
+            height: 50px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: white;
+            background: var(--emerald-bright);
+            box-shadow: 0 8px 20px -4px rgba(34, 197, 94, 0.35);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .register-btn:hover {
+            background: #16a34a;
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px -4px rgba(34, 197, 94, 0.45);
+        }
+
+        @media (max-width: 991px) {
+            .brand-panel { display: none; }
+            .form-panel { padding: 40px 24px; }
+            .main-content-area { margin-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Premium Global Layout Background Controls -->
+    <div class="register-top-hero-bg"></div>
+    <div class="premium-blur-orb"></div>
+
+    <!-- DYNAMIC NAV BAR (Seamless Dark To Light Adaptability) -->
+    {%include 'diet_desk_app/common/navbar.html'%}
+    
+    <!-- Form Content Container Block -->
+    <div class="container main-content-area my-auto py-3">
+        <div class="row justify-content-center">
+            <div class="col-xl-11">
+
+                <div class="row split-wrapper">
+                    <!-- Left Side Brand Column -->
+                    <div class="col-lg-5 brand-panel">
+                        <div>
+                            <span class="badge rounded-pill px-3 py-2 mb-4" style="background: rgba(34, 197, 94, 0.15); color: #4ade80;">
+                                <i class="fa-solid fa-crown me-2"></i>Diet Desk Premium
+                            </span>
+                            <h2 class="fw-bold h1 lh-sm text-white mb-3">Elevate your baseline health.</h2>
+                            <p class="text-white-50 small">Join an exclusive network configured to engineer sustainable physical longevity and automated tracking updates.</p>
+                        </div>
+
+                        <div class="mt-4 d-none d-sm-block">
+                            <div class="mini-glass-card">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-circle bg-success d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                                        <i class="fa-solid fa-bolt text-white small"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold text-white small">Tailored Profiles</h6>
+                                        <small class="text-white-50" style="font-size: 0.75rem;">Precision caloric calculations instantly mapped.</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mini-glass-card">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-circle bg-info d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background-color: #38bdf8 !important;">
+                                        <i class="fa-solid fa-shield-halved text-white small"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold text-white small">Encrypted Data</h6>
+                                        <small class="text-white-50" style="font-size: 0.75rem;">Your biometric telemetry is securely managed.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-top border-secondary-subtle">
+                            <p class="text-white-50" style="font-size: 0.75rem;">© 2026 Diet Desk Inc. High tier diagnostic protocols.</p>
+                        </div>
+                    </div>
+
+                    <!-- Right Side Form Column -->
+                    <div class="col-lg-7 form-panel">
+                        <div class="mb-4">
+                            <h1 class="form-title mb-1">Create Account</h1>
+                            <p class="text-muted small m-0">Input your clinical and standard identity attributes below.</p>
+                        </div>
+
+                        <form method="post" enctype="multipart/form-data" action="/user_registration/">
+                            {% csrf_token %}
+
+                            <div class="input-group-premium">
+                                <label class="field-label">Corporate or Personal Email</label>
+                                <i class="fa-regular fa-envelope field-icon"></i>
+                                <input type="email" class="form-control custom-input" placeholder="name@example.com" name="email" required>
+                            </div>
+
+                            <div class="input-group-premium">
+                                <label class="field-label">Account Security Key</label>
+                                <i class="fa-solid fa-lock-open field-icon"></i>
+                                <input type="password" class="form-control custom-input" placeholder="Choose a complex password" name="password" required>
+                            </div>
+
+                            <div class="input-group-premium">
+                                <label class="field-label">Legal First & Last Name</label>
+                                <i class="fa-regular fa-user field-icon"></i>
+                                <input type="text" class="form-control custom-input" placeholder="Alexander Wright" name="name " required>
+                            </div>
+
+                            <div class="input-group-premium">
+                                <label class="field-label">Mobile Telephony Line</label>
+                                <i class="fa-solid fa-phone-flip field-icon"></i>
+                                <input type="text" class="form-control custom-input" placeholder="+91 XXXXX XXXXX" name="phone" required>
+                            </div>
+
+                            <div class="input-group-premium">
+                                <label class="field-label">Current Residential Jurisdiction</label>
+                                <i class="fa-solid fa-location-dot field-icon"></i>
+                                <input type="text" class="form-control custom-input" placeholder="Your Current City" name="city" required>
+                            </div>
+
+                            <div class="input-group-premium">
+                                <label class="field-label">Biometric Profile Rendering</label>
+                                <i class="fa-regular fa-image field-icon"></i>
+                                <input type="file" class="form-control custom-input" name="profile_pic">
+                            </div>
+
+                            <div class="mt-4">
+                                <button type="submit" class="btn register-btn">
+                                    <span>Initialize Account Profile</span>
+                                    <i class="fa-solid fa-arrow-right-long"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT ENGINE CONTROLS -->
+    <script>
+    const navbar = document.querySelector('.navbar-custom');
+    const roleSwitch = document.getElementById("roleSwitch");
+    const switchTrigger = document.getElementById("switchTrigger");
+    const slidingPill = document.getElementById("slidingPill");
+    const lblUser = document.getElementById("lblUser");
+    const lblDietitian = document.getElementById("lblDietitian");
+    const loginBtn = document.getElementById("loginBtn");
+    const signupBtn = document.getElementById("signupBtn");
+
+    // Seamless Glass Dynamic Transition on Scroll
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 40) {
+            navbar.classList.add('navbar-scrolled');
+        } else {
+            navbar.classList.remove('navbar-scrolled');
+        }
+        updateSwitchUI(roleSwitch.checked);
+    });
+
+    switchTrigger.addEventListener("click", function() {
+        roleSwitch.checked = !roleSwitch.checked;
+        updateSwitchUI(roleSwitch.checked);
+    });
+
+    function updateSwitchUI(isChecked) {
+        const isScrolled = navbar.classList.contains('navbar-scrolled');
+        if (isChecked) {
+            const rightWidth = lblDietitian.offsetWidth;
+            const offsetLeft = lblDietitian.offsetLeft;
+            
+            slidingPill.style.width = rightWidth + "px";
+            slidingPill.style.transform = `translateX(${offsetLeft - 4}px)`;
+            
+            lblDietitian.style.color = "#091e16";
+            lblUser.style.color = isScrolled ? "#64748b" : "rgba(255, 255, 255, 0.5)";
+
+            loginBtn.innerHTML = "Dietitian Login";
+            signupBtn.innerHTML = "Dietitian Sign Up";
+        } else {
+            const leftWidth = lblUser.offsetWidth;
+            
+            slidingPill.style.width = leftWidth + "px";
+            slidingPill.style.transform = `translateX(0px)`;
+            
+            lblUser.style.color = "#091e16";
+            lblDietitian.style.color = isScrolled ? "#64748b" : "rgba(255, 255, 255, 0.5)";
+
+            loginBtn.innerHTML = "Login";
+            signupBtn.innerHTML = "Sign Up";
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        slidingPill.style.width = lblUser.offsetWidth + "px";
+    });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
